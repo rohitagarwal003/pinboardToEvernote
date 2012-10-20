@@ -5,8 +5,8 @@ from xml.dom.minidom import *
 
 def getRecentBookmarks(auth_token):
 	"""
-	Takes the pinboard auth_token (which is of the form username:alphanumericString)
-	Returns a list of (href, title, extended) for recent bookmarks.
+	Takes the Pinboard API Token (which is of the form username:alphanumericString)
+	Returns a list of (href, title, extended) tuples for recent bookmarks.
 	"""
 	url = "https://api.pinboard.in/v1/posts/recent?auth_token=%s" % (auth_token)
 	rawXML = urllib2.urlopen(url)
@@ -20,16 +20,39 @@ def getRecentBookmarks(auth_token):
 		bookmarkList.append(bookmark)
 	return bookmarkList
 
-def extractArticle(token, url):
+def getAllBookmarks(auth_token):
+	"""
+	Takes the Pinboard API Token (which is of the form username:alphanumericString)
+	Returns a list of (href, title, extended) tuples for all bookmarks.
+	"""
+	url = "https://api.pinboard.in/v1/posts/all?auth_token=%s" % (auth_token)
+	rawXML = urllib2.urlopen(url)
+	parsedXML = xml.dom.minidom.parse(rawXML)
+	bookmarkList = []
+	for post in parsedXML.getElementsByTagName("post"):
+		href = post.getAttribute("href")
+		title = post.getAttribute("description")
+		extended = post.getAttribute("extended")
+		bookmark = (href, title, extended)
+		bookmarkList.append(bookmark)
+	return bookmarkList
+
+def extractArticle(token, url, html=False):
 	"""
 	Takes the Diffbot developer token and the url of the article to be extracted.
 	Returns the text of the article.
 	"""
 	url = urllib.quote(url)
-	request = "http://www.diffbot.com/api/article?token=%s&url=%s" % (token, url)
-	responseJSON = urllib2.urlopen(request)
-	responseDict = json.load(responseJSON)
-	return responseDict["text"]
+	if html:
+		request = "http://www.diffbot.com/api/article?token=%s&url=%s&html" % (token, url)
+		responseJSON = urllib2.urlopen(request)
+		responseDict = json.load(responseJSON)
+		return responseDict["html"]
+	else:
+		request = "http://www.diffbot.com/api/article?token=%s&url=%s" % (token, url)
+		responseJSON = urllib2.urlopen(request)
+		responseDict = json.load(responseJSON)
+		return responseDict["text"]
 
 if __name__ == '__main__':
 	recentBookmarkList = getRecentBookmarks(PinboardAPIToken)
