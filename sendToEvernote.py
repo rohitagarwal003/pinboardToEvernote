@@ -76,10 +76,6 @@ for bookmark in recentBookmarkList:
 		exit(1)
 
 	enml = sanitize(html).toxml()
-	tup = re.subn('<body>', "", enml)
-	enml = tup[0]
-	tup = re.subn('</body>', "", enml)
-	enml = tup[0]
 	print
 	print enml
 	print
@@ -88,17 +84,15 @@ for bookmark in recentBookmarkList:
 	# attributes such as the note's title.
 	note = Types.Note()
 	note.title = bookmark[1]
-	note.attributes = Types.NoteAttributes()
-	note.attributes.sourceURL = bookmark[0]
+	#note.attributes = Types.NoteAttributes()
+	#note.attributes.sourceURL = bookmark[0]
 
 	# The content of an Evernote note is represented using Evernote Markup Language
 	# (ENML). The full ENML specification can be found in the Evernote API Overview
 	# at http://dev.evernote.com/documentation/cloud/chapters/ENML.php
 	note.content = '<?xml version="1.0" encoding="UTF-8"?>'
 	note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
-	note.content += '<en-note>'
 	note.content += enml
-	note.content += '</en-note>'
 
 	print
 	print "Creating a new note in the default notebook"

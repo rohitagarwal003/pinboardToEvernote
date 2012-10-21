@@ -6,13 +6,14 @@ from xml.dom.minidom import *
 import re
 
 def sanitize(html):
-        document, errors = tidy_fragment(html, options={"drop-proprietary-attributes":1, "doctype":'omit'})	
-	document, errors = tidy_document(document, options={"output-xhtml":1})	#xml.dom.minidom is an XML parser, not an HTML parser. Therefore, it doesn't know any HTML entities (only those which are common to both XML and HTML). So, when I was passing the document I got from earlier statement I got xml.parsers.expat.ExpatError: undefined entity.
+	document, errors = tidy_document(html, options={"output-xhtml":1, "drop-proprietary-attributes":1})	#xml.dom.minidom is an XML parser, not an HTML parser. Therefore, it doesn't know any HTML entities (only those which are common to both XML and HTML). So, if I didn't give output-xhtml I got xml.parsers.expat.ExpatError: undefined entity.
 	parsedDOM = xml.dom.minidom.parseString(document)
 	documentElement = parsedDOM.documentElement
 	removeProhibitedElements(documentElement)
 	removeProhibitedAttributes(documentElement)
-	return documentElement.getElementsByTagName("body")[0]
+	body = documentElement.getElementsByTagName("body")[0]
+	body.tagName = "en-note"
+	return body
 
 def removeProhibitedElements(documentElement):
 	prohibitedTagNames = ["applet", "base", "basefont", "bgsound", "blink", "button", "dir", "embed", "fieldset", "form", "frame", "frameset", "head", "iframe", "ilayer", "input", "isindex", "label", "layer","legend", "link", "marquee", "menu", "meta", "noframes", "noscript", "object", "optgroup", "option", "param", "plaintext", "script", "select", "style", "textarea", "xml",] 
@@ -26,7 +27,8 @@ def removeProhibitedElement(tagName, documentElement):
 		p.removeChild(element)
 
 def removeProhibitedAttributes(element):
-	prohibitedAttributes = ["id", "class", "onclick", "ondblclick", "on*", "accesskey", "data", "dynsrc", "tabindex",]
+	prohibitedAttributes = ["id", "class", "onclick", "ondblclick", "onload", "accesskey", "data", "dynsrc", "tabindex",]
+	#FIXME All on* attributes are prohibited. How to use a regular expression as argument to removeAttribute?
 	for attribute in prohibitedAttributes:
 		try:
 			element.removeAttribute(attribute)
