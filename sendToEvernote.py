@@ -63,8 +63,10 @@ try:
 except:
 	print "Fetching bookmarks from Pinboard failed."
 	traceback.print_exc()
+	print
 	exit(1)
 
+notesCreated = 0
 for bookmark in recentBookmarkList:
 
 	try:
@@ -72,6 +74,7 @@ for bookmark in recentBookmarkList:
 	except:
 		print "Extracting article using Diffbot failed."
 		traceback.print_exc()
+		print
 		#continue
 		exit(1)
 
@@ -79,20 +82,22 @@ for bookmark in recentBookmarkList:
 	print
 	print enml
 	print
-
+	print "length of enml is " + str(len(enml))
+	print "type of enml is " + str(type(enml))
 	# To create a new note, simply create a new Note object and fill in 
 	# attributes such as the note's title.
 	note = Types.Note()
 	note.title = bookmark[1]
 	#note.attributes = Types.NoteAttributes()
 	#note.attributes.sourceURL = bookmark[0]
+	#print note
 
 	# The content of an Evernote note is represented using Evernote Markup Language
 	# (ENML). The full ENML specification can be found in the Evernote API Overview
 	# at http://dev.evernote.com/documentation/cloud/chapters/ENML.php
 	note.content = '<?xml version="1.0" encoding="UTF-8"?>'
 	note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
-	note.content += enml
+	note.content += enml.encode('ascii', 'xmlcharrefreplace')
 
 	print
 	print "Creating a new note in the default notebook"
@@ -106,7 +111,11 @@ for bookmark in recentBookmarkList:
 	except:
 		print "Storing note in Evernote failed."
 		traceback.print_exc()
+		print
 		continue
 		#exit(1)
 
 	print "Successfully created a new note with GUID: ", createdNote.guid
+	notesCreated += 1
+
+print "Total number of notes created = " + str(notesCreated)
