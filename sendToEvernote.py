@@ -15,7 +15,8 @@ import evernote.edam.error.ttypes as Errors
 
 import traceback
 from credentials import *
-from fetchOldBookmarks import *
+from pinboard import *
+from diffbot import *
 from sanitize import *
 
 # Real applications authenticate with Evernote using OAuth, but for the
@@ -72,8 +73,8 @@ for bookmark in recentBookmarkList:
 	try:
 		html = extractArticle(DiffbotToken, bookmark[0], html=True)
 	except:
-		print bookmark[0]
 		print "Extracting article using Diffbot failed."
+		print bookmark[0]
 		traceback.print_exc()
 		print
 		continue
@@ -82,8 +83,8 @@ for bookmark in recentBookmarkList:
 	try:
 		enml = sanitize(html)
 	except:
-		print bookmark[0]
 		print "Converting article from HTML to ENML failed."
+		print bookmark[0]
 		traceback.print_exc()
 		print
 		continue
@@ -120,10 +121,10 @@ for bookmark in recentBookmarkList:
 	try:
 		createdNote = noteStore.createNote(authToken, note)
 	except:
+		print "Storing note in Evernote failed."
 		print bookmark[0]
 		print enml
 		print
-		print "Storing note in Evernote failed."
 		traceback.print_exc()
 		print
 		continue
