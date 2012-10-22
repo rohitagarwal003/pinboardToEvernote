@@ -24,7 +24,7 @@ from sanitize import *
 # https://sandbox.evernote.com/api/DeveloperToken.action
 authToken = EvernoteDeveloperToken
 
-if authToken == "your developer token":
+if not authToken:
     print "Please fill in your developer token"
     print "To get a developer token, visit https://sandbox.evernote.com/api/DeveloperToken.action"
     exit(1)
@@ -72,24 +72,35 @@ for bookmark in recentBookmarkList:
 	try:
 		html = extractArticle(DiffbotToken, bookmark[0], html=True)
 	except:
+		print bookmark[0]
 		print "Extracting article using Diffbot failed."
 		traceback.print_exc()
 		print
-		#continue
-		exit(1)
+		continue
+		#exit(1)
 
-	enml = sanitize(html).toxml()
-	print
-	print enml
-	print
-	print "length of enml is " + str(len(enml))
-	print "type of enml is " + str(type(enml))
+	try:
+		enml = sanitize(html)
+	except:
+		print bookmark[0]
+		print "Converting article from HTML to ENML failed."
+		traceback.print_exc()
+		print
+		continue
+		#exit(1)
+
+	#print
+	#print enml
+	#print
+	#print "length of enml is " + str(len(enml))
+	#print "type of enml is " + str(type(enml))
+
 	# To create a new note, simply create a new Note object and fill in 
 	# attributes such as the note's title.
 	note = Types.Note()
-	note.title = bookmark[1]
-	#note.attributes = Types.NoteAttributes()
-	#note.attributes.sourceURL = bookmark[0]
+	note.title = bookmark[1].strip()
+	note.attributes = Types.NoteAttributes()
+	note.attributes.sourceURL = bookmark[0].strip()
 	#print note
 
 	# The content of an Evernote note is represented using Evernote Markup Language
@@ -109,6 +120,9 @@ for bookmark in recentBookmarkList:
 	try:
 		createdNote = noteStore.createNote(authToken, note)
 	except:
+		print bookmark[0]
+		print enml
+		print
 		print "Storing note in Evernote failed."
 		traceback.print_exc()
 		print

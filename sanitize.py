@@ -13,7 +13,7 @@ def sanitize(html):
 	removeProhibitedAttributes(documentElement)
 	body = documentElement.getElementsByTagName("body")[0]
 	body.tagName = "en-note"
-	return body
+	return body.toxml()
 
 def removeProhibitedElements(documentElement):
 	prohibitedTagNames = ["applet", "base", "basefont", "bgsound", "blink", "button", "dir", "embed", "fieldset", "form", "frame", "frameset", "head", "iframe", "ilayer", "input", "isindex", "label", "layer","legend", "link", "marquee", "menu", "meta", "noframes", "noscript", "object", "optgroup", "option", "param", "plaintext", "script", "select", "style", "textarea", "xml",] 
