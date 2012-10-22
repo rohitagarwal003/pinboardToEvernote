@@ -2,8 +2,8 @@
 
 import traceback
 from credentials import *
-from pinboard import *
-from diffbot import *
+from pinboardHelper import *
+from diffbotHelper import *
 from sanitize import *
 from evernoteHelper import *
 
