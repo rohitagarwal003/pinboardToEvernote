@@ -39,14 +39,14 @@ def removeProhibitedAttributes(element):
 		if element.hasAttribute("href"):
 			t = element.toxml()
 			if re.search('href="http', t) or re.search('href="https', t):
-				pass                                         
+				pass
 			else:
-				element.removeAttribute("href")                  
+				element.removeAttribute("href")
 	except:
 		pass
 
-	listOfChildren = element.childNodes                          
-	for child in listOfChildren:                             
-		if child.nodeType == 1:                              
+	listOfChildren = element.childNodes
+	for child in listOfChildren:
+		if child.nodeType == 1:
 			removeProhibitedAttributes(child)
 

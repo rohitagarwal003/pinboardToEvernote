@@ -21,12 +21,12 @@ import evernote.edam.error.ttypes as Errors
 def sendToEvernote(title, sourceURL, enml, authToken, production=False):
 
 	if not authToken:
-	    print "Please fill in your developer token"
-	    print "To get a developer token, visit"
-	    print "https://sandbox.evernote.com/api/DeveloperToken.action (for testing and development)"
-	    print "OR"
-	    print "https://www.evernote.com/api/DeveloperToken.action (for production)"
-	    exit(1)
+		print "Please fill in your developer token"
+		print "To get a developer token, visit"
+		print "https://sandbox.evernote.com/api/DeveloperToken.action (for testing and development)"
+		print "OR"
+		print "https://www.evernote.com/api/DeveloperToken.action (for production)"
+		exit(1)
 
 	if production:
 		evernoteHost = "www.evernote.com"
