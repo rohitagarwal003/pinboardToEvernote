@@ -11,9 +11,15 @@ def extractArticle(token, url, html=True):
 		request = "http://www.diffbot.com/api/article?token=%s&url=%s&html" % (token, url)
 		responseJSON = urllib2.urlopen(request)
 		responseDict = json.load(responseJSON)
-		return responseDict["html"]
+		try:
+			return responseDict["html"]
+		except KeyError:
+			return ""
 	else:
 		request = "http://www.diffbot.com/api/article?token=%s&url=%s" % (token, url)
 		responseJSON = urllib2.urlopen(request)
 		responseDict = json.load(responseJSON)
-		return responseDict["text"]
+		try:
+			return responseDict["text"]
+		except KeyError:
+			return ""

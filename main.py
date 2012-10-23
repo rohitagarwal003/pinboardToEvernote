@@ -28,8 +28,14 @@ def main():
 		print
 		exit(1)
 
+	totalBookmarks = len(bookmarkList)
 	notesCreated = 0
+	diffbotErrors = 0
+	sanitizeErrors = 0
+	evernoteErrors = 0
+
 	failedURLs = open("failedURLs.txt", "a")
+
 	for bookmark in bookmarkList:
 
 		try:
@@ -40,6 +46,7 @@ def main():
 			failedURLs.write(bookmark[0] + "\n")
 			traceback.print_exc()
 			print
+			diffbotErrors += 1
 			continue
 			#exit(1)
 
@@ -51,6 +58,7 @@ def main():
 			failedURLs.write(bookmark[0] + "\n")
 			traceback.print_exc()
 			print
+			sanitizeErrors += 1
 			continue
 			#exit(1)
 
@@ -60,10 +68,11 @@ def main():
 			print "Storing note in Evernote failed."
 			print bookmark[0]
 			failedURLs.write(bookmark[0] + "\n")
-			print enml
+			#print enml
 			print
 			traceback.print_exc()
 			print
+			evernoteErrors += 1
 			continue
 			#exit(1)
 
@@ -76,7 +85,11 @@ def main():
 	f.write(todt)
 	f.close()
 
+	print "Total bookmarks = " + str(totalBookmarks)
 	print "Total number of notes created = " + str(notesCreated)
+	print "Diffbot Errors = " + str(diffbotErrors)
+	print "Sanitize Errors = " + str(sanitizeErrors)
+	print "Evernote Errors = " + str(evernoteErrors)
 
 
 if __name__ == "__main__":

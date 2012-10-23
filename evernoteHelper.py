@@ -45,7 +45,7 @@ def sendToEvernote(title, sourceURL, enml, authToken, production=False):
 
 	# To create a new note, simply create a new Note object and fill in attributes
 	note = Types.Note()
-	note.title = title
+	note.title = title.encode('ascii', 'xmlcharrefreplace')
 	note.attributes = Types.NoteAttributes()
 	note.attributes.sourceURL = sourceURL
 
