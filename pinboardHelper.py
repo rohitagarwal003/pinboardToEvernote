@@ -1,6 +1,8 @@
 #!/usr/bin/python
-import urllib2, datetime 
+import urllib2
+import datetime
 from xml.dom.minidom import *
+
 
 def getRecentBookmarks(auth_token):
 	"""
@@ -10,6 +12,7 @@ def getRecentBookmarks(auth_token):
 	url = "https://api.pinboard.in/v1/posts/recent?auth_token=%s" % (auth_token)
 	return getList(url)
 
+
 def getAllBookmarks(auth_token):
 	"""
 	Takes the Pinboard API Token (which is of the form username:HEXADECIMALSTRING)
@@ -17,6 +20,7 @@ def getAllBookmarks(auth_token):
 	"""
 	url = "https://api.pinboard.in/v1/posts/all?auth_token=%s" % (auth_token)
 	return getList(url)
+
 
 def getTodaysBookmarks(auth_token):
 	"""
@@ -26,6 +30,7 @@ def getTodaysBookmarks(auth_token):
 	url = "https://api.pinboard.in/v1/posts/get?auth_token=%s&dt=%s" % (auth_token, str(datetime.datetime.utcnow().date()))
 	return getList(url)
 
+
 def getBookmarksFromDate(auth_token, fromdt):
 	"""
 	Takes the Pinboard API Token (which is of the form username:HEXADECIMALSTRING) and a datetime.date() object.
@@ -33,6 +38,7 @@ def getBookmarksFromDate(auth_token, fromdt):
 	"""
 	url = "https://api.pinboard.in/v1/posts/all?auth_token=%s&fromdt=%s" % (auth_token, str(fromdt))
 	return getList(url)
+
 
 def getList(url):
 	rawXML = urllib2.urlopen(url)

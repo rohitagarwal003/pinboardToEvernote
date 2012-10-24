@@ -2,8 +2,6 @@
 
 import sys
 import os
-import hashlib
-import binascii
 import time
 
 home = os.path.dirname(os.path.abspath(__file__))
@@ -17,6 +15,7 @@ import evernote.edam.userstore.constants as UserStoreConstants
 import evernote.edam.notestore.NoteStore as NoteStore
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
+
 
 class EvernoteHelper:
 

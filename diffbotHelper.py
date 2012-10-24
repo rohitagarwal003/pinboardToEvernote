@@ -1,5 +1,8 @@
 #!/usr/bin/python
-import urllib, urllib2, json
+import urllib
+import urllib2
+import json
+
 
 def extractArticle(token, url, html=True):
 	"""

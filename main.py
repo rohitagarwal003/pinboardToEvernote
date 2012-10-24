@@ -1,16 +1,18 @@
 #!/usr/bin/python
 
-import traceback, datetime
+import traceback
+import datetime
 from credentials import *
 from pinboardHelper import *
 from diffbotHelper import *
 from sanitize import *
 from evernoteHelper import *
 
+
 def main():
 	try:
 		try:
-			f = open ("lastUpdate.txt", "r")
+			f = open("lastUpdate.txt", "r")
 			fromdt = f.read().strip()
 			f.close()
 			bookmarkList = getBookmarksFromDate(PinboardAPIToken, fromdt)

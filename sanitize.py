@@ -6,8 +6,9 @@ import re
 from tidylib import *
 from xml.dom.minidom import *
 
+
 def sanitize(html):
-	document, errors = tidy_document(html, options={"output-xhtml":1, "drop-proprietary-attributes":1, "merge-divs":1, "clean":1})	#xml.dom.minidom is an XML parser, not an HTML parser. Therefore, it doesn't know any HTML entities (only those which are common to both XML and HTML). So, if I didn't give output-xhtml I got xml.parsers.expat.ExpatError: undefined entity.
+	document, errors = tidy_document(html, options={"output-xhtml": 1, "drop-proprietary-attributes": 1, "merge-divs": 1, "clean": 1})		# xml.dom.minidom is an XML parser, not an HTML parser. Therefore, it doesn't know any HTML entities (only those which are common to both XML and HTML). So, if I didn't give output-xhtml I got xml.parsers.expat.ExpatError: undefined entity.
 	parsedDOM = xml.dom.minidom.parseString(document)
 	documentElement = parsedDOM.documentElement
 	removeProhibitedElements(documentElement)
@@ -16,10 +17,12 @@ def sanitize(html):
 	body.tagName = "en-note"
 	return body.toxml()
 
+
 def removeProhibitedElements(documentElement):
-	prohibitedTagNames = ["applet", "base", "basefont", "bgsound", "blink", "button", "dir", "embed", "fieldset", "form", "frame", "frameset", "head", "iframe", "ilayer", "input", "isindex", "label", "layer","legend", "link", "marquee", "menu", "meta", "noframes", "noscript", "object", "optgroup", "option", "param", "plaintext", "script", "select", "style", "textarea", "xml",] 
+	prohibitedTagNames = ["applet", "base", "basefont", "bgsound", "blink", "button", "dir", "embed", "fieldset", "form", "frame", "frameset", "head", "iframe", "ilayer", "input", "isindex", "label", "layer", "legend", "link", "marquee", "menu", "meta", "noframes", "noscript", "object", "optgroup", "option", "param", "plaintext", "script", "select", "style", "textarea", "xml", ]
 	for tagName in prohibitedTagNames:
 		removeProhibitedElement(tagName, documentElement)
+
 
 def removeProhibitedElement(tagName, documentElement):
 	elements = documentElement.getElementsByTagName(tagName)
@@ -27,8 +30,9 @@ def removeProhibitedElement(tagName, documentElement):
 		p = element.parentNode
 		p.removeChild(element)
 
+
 def removeProhibitedAttributes(element):
-	prohibitedAttributes = ["id", "class", "onclick", "ondblclick", "onload", "accesskey", "data", "dynsrc", "tabindex",]
+	prohibitedAttributes = ["id", "class", "onclick", "ondblclick", "onload", "accesskey", "data", "dynsrc", "tabindex", "onmouseover", "onmouseout", "onblur", ]
 	#FIXME All on* attributes are prohibited. How to use a regular expression as argument to removeAttribute?
 	for attribute in prohibitedAttributes:
 		try:
@@ -49,4 +53,3 @@ def removeProhibitedAttributes(element):
 	for child in listOfChildren:
 		if child.nodeType == 1:
 			removeProhibitedAttributes(child)
-
