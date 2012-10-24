@@ -18,48 +18,52 @@ import evernote.edam.notestore.NoteStore as NoteStore
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
 
-def sendToEvernote(title, sourceURL, enml, authToken, production=False):
+class EvernoteHelper:
 
-	if not authToken:
-		print "Please fill in your developer token"
-		print "To get a developer token, visit"
-		print "https://sandbox.evernote.com/api/DeveloperToken.action (for testing and development)"
-		print "OR"
-		print "https://www.evernote.com/api/DeveloperToken.action (for production)"
-		exit(1)
+	def __init__(self, authToken, production=False):
+		if not authToken:
+			print "Please fill in your developer token"
+			print "To get a developer token, visit"
+			print "https://sandbox.evernote.com/api/DeveloperToken.action (for testing and development)"
+			print "OR"
+			print "https://www.evernote.com/api/DeveloperToken.action (for production)"
+			exit(1)
 
-	if production:
-		evernoteHost = "www.evernote.com"
-	else:
-		evernoteHost = "sandbox.evernote.com"
+		if production:
+			self.evernoteHost = "www.evernote.com"
+		else:
+			self.evernoteHost = "sandbox.evernote.com"
 
-	userStoreUri = "https://" + evernoteHost + "/edam/user"
-	userStoreHttpClient = THttpClient.THttpClient(userStoreUri)
-	userStoreProtocol = TBinaryProtocol.TBinaryProtocol(userStoreHttpClient)
-	userStore = UserStore.Client(userStoreProtocol)
+		self.authToken = authToken
+		self.userStoreUri = "https://" + self.evernoteHost + "/edam/user"
+		self.userStoreHttpClient = THttpClient.THttpClient(self.userStoreUri)
+		self.userStoreProtocol = TBinaryProtocol.TBinaryProtocol(self.userStoreHttpClient)
+		self.userStore = UserStore.Client(self.userStoreProtocol)
 
-	noteStoreUrl = userStore.getNoteStoreUrl(authToken)
-	noteStoreHttpClient = THttpClient.THttpClient(noteStoreUrl)
-	noteStoreProtocol = TBinaryProtocol.TBinaryProtocol(noteStoreHttpClient)
-	noteStore = NoteStore.Client(noteStoreProtocol)
+		self.noteStoreUrl = self.userStore.getNoteStoreUrl(authToken)
+		self.noteStoreHttpClient = THttpClient.THttpClient(self.noteStoreUrl)
+		self.noteStoreProtocol = TBinaryProtocol.TBinaryProtocol(self.noteStoreHttpClient)
+		self.noteStore = NoteStore.Client(self.noteStoreProtocol)
 
-	# To create a new note, simply create a new Note object and fill in attributes
-	note = Types.Note()
-	note.title = title.encode('ascii', 'xmlcharrefreplace')
-	note.attributes = Types.NoteAttributes()
-	note.attributes.sourceURL = sourceURL
+	def sendToEvernote(self, title, sourceURL, enml):
 
-	note.content = '<?xml version="1.0" encoding="UTF-8"?>'
-	note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
-	note.content += enml.encode('ascii', 'xmlcharrefreplace')
+		# To create a new note, simply create a new Note object and fill in attributes
+		note = Types.Note()
+		note.title = title.encode('ascii', 'xmlcharrefreplace')
+		note.attributes = Types.NoteAttributes()
+		note.attributes.sourceURL = sourceURL
 
-	print
-	print "Creating a new note in the default notebook"
-	print
+		note.content = '<?xml version="1.0" encoding="UTF-8"?>'
+		note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
+		note.content += enml.encode('ascii', 'xmlcharrefreplace')
 
-	# Finally, send the new note to Evernote using the createNote method
-	# The new Note object that is returned will contain server-generated
-	# attributes such as the new note's unique GUID.
-	createdNote = noteStore.createNote(authToken, note)
+		print
+		print "Creating a new note in the default notebook"
+		print
 
-	print "Successfully created a new note with GUID: ", createdNote.guid
+		# Finally, send the new note to Evernote using the createNote method
+		# The new Note object that is returned will contain server-generated
+		# attributes such as the new note's unique GUID.
+		createdNote = self.noteStore.createNote(self.authToken, note)
+
+		print "Successfully created a new note with GUID: ", createdNote.guid

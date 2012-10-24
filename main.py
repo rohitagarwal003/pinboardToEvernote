@@ -34,6 +34,14 @@ def main():
 	sanitizeErrors = 0
 	evernoteErrors = 0
 
+	try:
+		evernoteHelper = EvernoteHelper(EvernoteDeveloperToken)
+	except:
+		print "Creating EvernoteHelper failed."
+		traceback.print_exc()
+		print
+		exit(1)
+
 	failedURLs = open("failedURLs.txt", "a")
 
 	for bookmark in bookmarkList:
@@ -63,7 +71,7 @@ def main():
 			#exit(1)
 
 		try:
-			sendToEvernote(bookmark[1], bookmark[0], enml, EvernoteDeveloperToken)
+			evernoteHelper.sendToEvernote(bookmark[1], bookmark[0], enml)
 		except:
 			print "Storing note in Evernote failed."
 			print bookmark[0]
@@ -85,6 +93,7 @@ def main():
 	f.write(todt)
 	f.close()
 
+	print
 	print "Total bookmarks = " + str(totalBookmarks)
 	print "Total number of notes created = " + str(notesCreated)
 	print "Diffbot Errors = " + str(diffbotErrors)
