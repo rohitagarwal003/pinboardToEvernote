@@ -11,6 +11,7 @@ from evernoteHelper import *
 
 def main():
 	try:
+		print "Fetching bookmarks from Pinboard..."
 		try:
 			f = open("lastUpdate.txt", "r")
 			fromdt = f.read().strip()
@@ -37,6 +38,7 @@ def main():
 	evernoteErrors = 0
 
 	try:
+		print "Initializing EvernoteHelper..."
 		evernoteHelper = EvernoteHelper(EvernoteDeveloperToken)
 	except:
 		print "Creating EvernoteHelper failed."
@@ -46,9 +48,11 @@ def main():
 
 	failedURLs = open("failedURLs.txt", "a")
 
+	print
 	for bookmark in bookmarkList:
 
 		try:
+			print "Extracting article using Diffbot..."
 			html = extractArticle(DiffbotToken, bookmark[0], html=True)
 		except:
 			print "Extracting article using Diffbot failed."
@@ -58,9 +62,9 @@ def main():
 			print
 			diffbotErrors += 1
 			continue
-			#exit(1)
 
 		try:
+			print "Converting article from HTML to ENML..."
 			enml = sanitize(html)
 		except:
 			print "Converting article from HTML to ENML failed."
@@ -70,21 +74,18 @@ def main():
 			print
 			sanitizeErrors += 1
 			continue
-			#exit(1)
 
 		try:
-			evernoteHelper.sendToEvernote(bookmark[1], bookmark[0], enml)
+			print "Storing note in Evernote..."
+			evernoteHelper.sendToEvernote(bookmark[1], bookmark[0], enml, notebookName="Pinboard")
 		except:
 			print "Storing note in Evernote failed."
 			print bookmark[0]
 			failedURLs.write(bookmark[0] + "\n")
-			#print enml
-			print
 			traceback.print_exc()
 			print
 			evernoteErrors += 1
 			continue
-			#exit(1)
 
 		notesCreated += 1
 
@@ -101,7 +102,7 @@ def main():
 	print "Diffbot Errors = " + str(diffbotErrors)
 	print "Sanitize Errors = " + str(sanitizeErrors)
 	print "Evernote Errors = " + str(evernoteErrors)
-
+	print
 
 if __name__ == "__main__":
 	main()

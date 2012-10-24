@@ -44,7 +44,7 @@ class EvernoteHelper:
 		self.noteStoreProtocol = TBinaryProtocol.TBinaryProtocol(self.noteStoreHttpClient)
 		self.noteStore = NoteStore.Client(self.noteStoreProtocol)
 
-	def sendToEvernote(self, title, sourceURL, enml):
+	def sendToEvernote(self, title, sourceURL, enml, notebookName=None):
 
 		# To create a new note, simply create a new Note object and fill in attributes
 		note = Types.Note()
@@ -52,13 +52,21 @@ class EvernoteHelper:
 		note.attributes = Types.NoteAttributes()
 		note.attributes.sourceURL = sourceURL
 
+		if notebookName:
+			notebooks = self.noteStore.listNotebooks(self.authToken)
+			for notebook in notebooks:
+				if notebook.name == notebookName:
+					note.notebookGuid = notebook.guid
+					print "Creating a new note in '%s' notebook..." % notebookName
+					break
+			else:
+				print "'%s' notebook not found. Creating a new note in the default notebook instead..." % notebookName
+		else:
+			print "Creating a new note in the default notebook..."
+
 		note.content = '<?xml version="1.0" encoding="UTF-8"?>'
 		note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
 		note.content += enml.encode('ascii', 'xmlcharrefreplace')
-
-		print
-		print "Creating a new note in the default notebook"
-		print
 
 		# Finally, send the new note to Evernote using the createNote method
 		# The new Note object that is returned will contain server-generated
@@ -66,3 +74,4 @@ class EvernoteHelper:
 		createdNote = self.noteStore.createNote(self.authToken, note)
 
 		print "Successfully created a new note with GUID: ", createdNote.guid
+		print
