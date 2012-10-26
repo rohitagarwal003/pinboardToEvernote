@@ -2,6 +2,7 @@
 
 import traceback
 import datetime
+import argparse
 from credentials import *
 from pinboardHelper import *
 from diffbotHelper import *
@@ -10,6 +11,12 @@ from evernoteHelper import *
 
 
 def main():
+
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-s", "--sandbox", action="store_true", help="Store notes on sandbox.evernote.com instead of www.evernote.com. Use this option when you are testing the utility")
+	parser.add_argument("-n", "--notebook-name", metavar="NOTEBOOK", help="The notebook to store the bookmarks")
+	args = parser.parse_args()
+
 	try:
 		print "Fetching bookmarks from Pinboard..."
 		try:
@@ -39,7 +46,10 @@ def main():
 
 	try:
 		print "Initializing EvernoteHelper..."
-		evernoteHelper = EvernoteHelper(EvernoteDeveloperToken)
+		if args.sandbox:
+			evernoteHelper = EvernoteHelper(EvernoteDeveloperToken, production=False)
+		else:
+			evernoteHelper = EvernoteHelper(EvernoteDeveloperToken, production=True)
 	except:
 		print "Creating EvernoteHelper failed."
 		traceback.print_exc()
@@ -77,7 +87,7 @@ def main():
 
 		try:
 			print "Storing note in Evernote..."
-			evernoteHelper.sendToEvernote(bookmark[1], bookmark[0], enml, notebookName="Pinboard")
+			evernoteHelper.sendToEvernote(bookmark[1], bookmark[0], enml, notebookName=args.notebook_name)
 		except:
 			print "Storing note in Evernote failed."
 			print bookmark[0]

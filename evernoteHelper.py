@@ -19,9 +19,9 @@ import evernote.edam.error.ttypes as Errors
 
 class EvernoteHelper:
 
-	def __init__(self, authToken, production=False):
+	def __init__(self, authToken, production):
 		if not authToken:
-			print "Please fill in your developer token"
+			print "Please fill in your evernote developer token"
 			print "To get a developer token, visit"
 			print "https://sandbox.evernote.com/api/DeveloperToken.action (for testing and development)"
 			print "OR"
