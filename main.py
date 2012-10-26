@@ -13,8 +13,8 @@ from evernoteHelper import *
 def main():
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-s", "--sandbox", action="store_true", help="Store notes on sandbox.evernote.com instead of www.evernote.com. Use this option when you are testing the utility")
-	parser.add_argument("-n", "--notebook-name", metavar="NOTEBOOK", help="The notebook to store the bookmarks")
+	parser.add_argument("-s", "--sandbox", action="store_true", help="Store notes in a test account at sandbox.evernote.com instead of your main account at www.evernote.com. Use this option when you are testing the utility.")
+	parser.add_argument("-n", "--notebook-name", metavar="NOTEBOOK", help="Store the bookmarks in the notebook named NOTEBOOK. If no notebook is specified then bookmarks are stored in the default notebook. If NOTEBOOK doesn't exist, then bookmarks are stored in the default notebook.")
 	args = parser.parse_args()
 
 	try:
@@ -59,7 +59,7 @@ def main():
 	failedURLs = open("failedURLs.txt", "a")
 
 	print
-	for bookmark in bookmarkList:
+	for bookmark in reversed(bookmarkList):
 
 		try:
 			print "Extracting article using Diffbot..."
