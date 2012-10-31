@@ -48,7 +48,7 @@ class EvernoteHelper:
 
 		# To create a new note, simply create a new Note object and fill in attributes
 		note = Types.Note()
-		note.title = title.encode('ascii', 'xmlcharrefreplace')
+		note.title = title.encode('utf-8', 'xmlcharrefreplace')
 		note.attributes = Types.NoteAttributes()
 		note.attributes.sourceURL = sourceURL
 
