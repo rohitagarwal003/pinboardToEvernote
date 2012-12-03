@@ -23,11 +23,13 @@ def main():
 			f = open("lastUpdate.txt", "r")
 			fromdt = f.read().strip()
 			f.close()
+			print "Last fetched on: %s" % fromdt
 			bookmarkList = getBookmarksFromDate(PinboardAPIToken, fromdt)
 		except IOError:
 			# If lastUpdate.txt doesn't exist.
 			# It means that the program is being run for the first time.
 			# So get all bookmarks.
+			print "Last fetched on: Never"
 			bookmarkList = getAllBookmarks(PinboardAPIToken)
 
 		# We have fetched bookmarks uptill now.
@@ -43,6 +45,8 @@ def main():
 	diffbotErrors = 0
 	sanitizeErrors = 0
 	evernoteErrors = 0
+
+	print "Total bookmarks = " + str(totalBookmarks)
 
 	try:
 		print "Initializing EvernoteHelper..."
