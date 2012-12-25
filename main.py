@@ -17,28 +17,33 @@ def main():
 	parser.add_argument("-n", "--notebook-name", metavar="NOTEBOOK", help="Store the bookmarks in the notebook named NOTEBOOK. If no notebook is specified then bookmarks are stored in the default notebook. If NOTEBOOK doesn't exist, then bookmarks are stored in the default notebook.")
 	args = parser.parse_args()
 
+	print "Fetching bookmarks from Pinboard..."
 	try:
-		print "Fetching bookmarks from Pinboard..."
-		try:
-			f = open("lastUpdate.txt", "r")
-			fromdt = f.read().strip()
-			f.close()
-			print "Last fetched on: %s" % fromdt
-			bookmarkList = getBookmarksFromDate(PinboardAPIToken, fromdt)
-		except IOError:
-			# If lastUpdate.txt doesn't exist.
-			# It means that the program is being run for the first time.
-			# So get all bookmarks.
-			print "Last fetched on: Never"
-			bookmarkList = getAllBookmarks(PinboardAPIToken)
+		f = open("lastUpdate.txt", "r")
+		fromdt = f.read().strip()
+		f.close()
+		firstUse = False
+		print "Last fetched on: %s" % fromdt
+	except IOError:
+		# If lastUpdate.txt doesn't exist.
+		# It means that the program is being run for the first time.
+		# So get all bookmarks.
+		print "Last fetched on: Never"
+		firstUse = True
 
-		# We have fetched bookmarks uptill now.
-		todt = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+	try:
+		if firstUse:
+			bookmarkList = getAllBookmarks(PinboardAPIToken)
+		else:
+			bookmarkList = getBookmarksFromDate(PinboardAPIToken, fromdt)
 	except:
 		print "Fetching bookmarks from Pinboard failed."
 		traceback.print_exc()
 		print
 		exit(1)
+
+	# We have fetched bookmarks uptill now.
+	todt = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
 	totalBookmarks = len(bookmarkList)
 	notesCreated = 0
