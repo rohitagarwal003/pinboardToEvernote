@@ -66,7 +66,7 @@ class EvernoteHelper:
 
 		note.content = '<?xml version="1.0" encoding="UTF-8"?>'
 		note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
-		note.content += enml.encode('ascii', 'xmlcharrefreplace')
+		note.content += enml.encode('utf-8', 'xmlcharrefreplace')
 
 		# Finally, send the new note to Evernote using the createNote method
 		# The new Note object that is returned will contain server-generated
