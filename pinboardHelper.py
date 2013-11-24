@@ -24,6 +24,16 @@ def getAllBookmarks(auth_token):
 	return getList(url)
 
 
+def getAllBookmarksTagged(auth_token, tag):
+	"""
+	Takes the Pinboard API Token (which is of the form username:HEXADECIMALSTRING) and a string tag
+	Returns a list of (href, title, extended) tuples for all bookmarks which are tagged with that tag.
+	"""
+	checkToken(auth_token)
+	url = "https://api.pinboard.in/v1/posts/all?auth_token=%s&tag=%s" % (auth_token, tag)
+	return getList(url)
+
+
 def getTodaysBookmarks(auth_token):
 	"""
 	Takes the Pinboard API Token (which is of the form username:HEXADECIMALSTRING)
@@ -41,6 +51,16 @@ def getBookmarksFromDate(auth_token, fromdt):
 	"""
 	checkToken(auth_token)
 	url = "https://api.pinboard.in/v1/posts/all?auth_token=%s&fromdt=%s" % (auth_token, str(fromdt))
+	return getList(url)
+
+
+def getBookmarksFromDateTagged(auth_token, fromdt, tag):
+	"""
+	Takes the Pinboard API Token (which is of the form username:HEXADECIMALSTRING), a datetime.date() object and a string tag.
+	Returns a list of (href, title, extended) tuples for all bookmarks created after fromdt which are tagged with that tag.
+	"""
+	checkToken(auth_token)
+	url = "https://api.pinboard.in/v1/posts/all?auth_token=%s&fromdt=%s&tag=%s" % (auth_token, str(fromdt), tag)
 	return getList(url)
 
 

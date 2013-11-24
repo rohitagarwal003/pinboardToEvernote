@@ -15,6 +15,7 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-s", "--sandbox", action="store_true", help="Store notes in a test account at sandbox.evernote.com instead of your main account at www.evernote.com. Use this option when you are testing the utility.")
 	parser.add_argument("-n", "--notebook-name", metavar="NOTEBOOK", help="Store the bookmarks in the notebook named NOTEBOOK. If no notebook is specified then bookmarks are stored in the default notebook. If NOTEBOOK doesn't exist, then bookmarks are stored in the default notebook.")
+	parser.add_argument("-t", "--tag", metavar="TAG", help="Retrieve only those bookmarks from pinboard which are tagged TAG.")
 	args = parser.parse_args()
 
 	print "Fetching bookmarks from Pinboard..."
@@ -33,9 +34,15 @@ def main():
 
 	try:
 		if firstUse:
-			bookmarkList = getAllBookmarks(PinboardAPIToken)
+			if args.tag:
+				bookmarkList = getAllBookmarksTagged(PinboardAPIToken, args.tag)
+			else:
+				bookmarkList = getAllBookmarks(PinboardAPIToken)
 		else:
-			bookmarkList = getBookmarksFromDate(PinboardAPIToken, fromdt)
+			if args.tag:
+				bookmarkList = getBookmarksFromDateTagged(PinboardAPIToken, fromdt, args.tag)
+			else:
+				bookmarkList = getBookmarksFromDate(PinboardAPIToken, fromdt)
 	except:
 		print "Fetching bookmarks from Pinboard failed."
 		traceback.print_exc()
