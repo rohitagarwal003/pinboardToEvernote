@@ -23,7 +23,7 @@ Tested on Python 2.7
 Usage
 -----
 ```
-main.py [-h] [-s] [-n NOTEBOOK]
+main.py [-h] [-s] [-n NOTEBOOK] [-t TAG]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -35,6 +35,8 @@ optional arguments:
                         no notebook is specified then bookmarks are stored in
                         the default notebook. If NOTEBOOK doesn't exist, then
                         bookmarks are stored in the default notebook.
+  -t TAG, --tag TAG     Retrieve only those bookmarks from pinboard which are
+                        tagged TAG.
 ```
 
 Comments
