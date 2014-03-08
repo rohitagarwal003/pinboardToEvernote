@@ -10,6 +10,7 @@ I really love Pinboard. It is very fast and gets out of the way quickly. But if 
 
 Prerequisites
 -------------
+* Install [HTML Tidy](http://tidy.sourceforge.net/) `sudo yum install libtidy-devel` OR `sudo apt-get install libtidy-dev`
 * Install [PyTidyLib](http://countergram.com/open-source/pytidylib/docs/index.html) `sudo easy_install pytidylib`
 * Fill the `credentials.py` file:
   * You can find your Pinboard API token on your https://pinboard.in/settings/password page
