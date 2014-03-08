@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Pinboard To Evernote by mindprince</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Pinboard To Evernote</h1>
+        <p>Archive the content of your pinboard bookmarks as notes in your evernote account.</p>
+        <p class="view"><a href="https://github.com/mindprince/pinboardToEvernote">View the Project on GitHub <small>mindprince/pinboardToEvernote</small></a></p>
+        <ul>
+          <li><a href="https://github.com/mindprince/pinboardToEvernote/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mindprince/pinboardToEvernote/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mindprince/pinboardToEvernote">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="pinboard-to-evernote" class="anchor" href="#pinboard-to-evernote"><span class="octicon octicon-link"></span></a>Pinboard To Evernote</h1>
+
+<h2>
+<a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>About</h2>
+
+<p>Archive the content of your pinboard bookmarks as notes in your evernote account.</p>
+
+<h2>
+<a name="motivation" class="anchor" href="#motivation"><span class="octicon octicon-link"></span></a>Motivation</h2>
+
+<p>I really love Pinboard. It is very fast and gets out of the way quickly. But if you don't pay for an annual archival account, then search is rather hit-or-miss. If you don't remember part of the title or the url, then good luck finding the bookmark you are looking for. So, I created this utility which stores the content of your pinboard bookmarks in your evernote account. Consider this a poor man's version of Pinboard archival account.</p>
+
+<h2>
+<a name="prerequisites" class="anchor" href="#prerequisites"><span class="octicon octicon-link"></span></a>Prerequisites</h2>
+
+<ul>
+<li>Install <a href="http://tidy.sourceforge.net/">HTML Tidy</a> <code>sudo yum install libtidy-devel</code> OR <code>sudo apt-get install libtidy-dev</code>
+</li>
+<li>Install <a href="http://countergram.com/open-source/pytidylib/docs/index.html">PyTidyLib</a> <code>sudo easy_install pytidylib</code>
+</li>
+<li>Fill the <code>credentials.py</code> file:
+
+<ul>
+<li>You can find your Pinboard API token on your <a href="https://pinboard.in/settings/password">https://pinboard.in/settings/password</a> page</li>
+<li>You can get a free Diffbot Developer Token from <a href="http://www.diffbot.com/plans/free">http://www.diffbot.com/plans/free</a>
+</li>
+<li>You can get a developer token that allows you to access your own Evernote account from:
+
+<ul>
+<li>
+<a href="https://sandbox.evernote.com/api/DeveloperToken.action">https://sandbox.evernote.com/api/DeveloperToken.action</a> (if you want to store notes in a test account at <a href="https://sandbox.evernote.com">https://sandbox.evernote.com</a> You will need to create a test account first.)</li>
+<li>
+<a href="https://www.evernote.com/api/DeveloperToken.action">https://www.evernote.com/api/DeveloperToken.action</a> (if you want to store notes in your main account at <a href="https://www.evernote.com">https://www.evernote.com</a>)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><p>Tested on Python 2.7</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<pre><code>main.py [-h] [-s] [-n NOTEBOOK] [-t TAG]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s, --sandbox         Store notes in a test account at sandbox.evernote.com
+                        instead of your main account at www.evernote.com. Use
+                        this option when you are testing the utility.
+  -n NOTEBOOK, --notebook-name NOTEBOOK
+                        Store the bookmarks in the notebook named NOTEBOOK. If
+                        no notebook is specified then bookmarks are stored in
+                        the default notebook. If NOTEBOOK doesn't exist, then
+                        bookmarks are stored in the default notebook.
+  -t TAG, --tag TAG     Retrieve only those bookmarks from pinboard which are
+                        tagged TAG.
+</code></pre>
+
+<h2>
+<a name="comments" class="anchor" href="#comments"><span class="octicon octicon-link"></span></a>Comments</h2>
+
+<ul>
+<li>If you want to test the utility:
+
+<ul>
+<li>Create a test account at <a href="https://sandbox.evernote.com">https://sandbox.evernote.com</a>
+</li>
+<li>Fill the <code>credentials.py</code> file.</li>
+<li>Create a file named <code>lastUpdate.txt</code> in the project directory and enter a recent date and time like this <code>2012-10-20T10:20:30Z</code>.</li>
+<li>Run <code>main.py -s</code>
+</li>
+<li>This will store the content of your Pinboard bookmarks created after <code>2012-10-20T10:20:30Z</code> in your test account at <a href="https://sandbox.evernote.com">https://sandbox.evernote.com</a>
+</li>
+</ul>
+</li>
+<li>If you are satisfied with the results:
+
+<ul>
+<li>Delete the <code>lastUpdate.txt</code> file you created earlier.</li>
+<li>Change your EvernoteDeveloperToken to the one for your main account at <a href="https://www.evernote.com">https://www.evernote.com</a>
+</li>
+<li>Create a new notebook in your evernote account (if you don't do this the bookmarks will be stored in your default notebook)</li>
+<li>Run <code>main.py -n Pinboard</code> (if the notebook you created was named 'Pinboard')</li>
+<li>Sit back and relax. The first run may take a lot of time depending on the number of bookmarks you have in your Pinboard account.</li>
+<li>Either set up a cron job which executes <code>main.py -n Pinboard</code> daily. Or execute the script manually after regular intervals.</li>
+</ul>
+</li>
+</ul>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/mindprince">mindprince</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
